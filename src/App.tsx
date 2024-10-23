@@ -1,35 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from "react";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import Product from "./Product";
+import Payment from "./Payment";
+import "./App.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+const stripePromise = loadStripe(
+  "pk_test_51NWwiEFp3okaMSLW4i2xVB3dNbU7sR9DQuOW6tJuCNRVsw5Rw5ahYvEtLt3WotPG2m4v56jORjPVTqpdYe2RggA600REIdgwvB"
+);
+
+const App: React.FC = () => {
+  const [selectedProduct, setSelectedProduct] = useState<{
+    name: string;
+    price: number;
+  } | null>(null);
+
+  //PRODUCTO
+  const product = {
+    name: "Tour 2 days and 1 night: Mont Blanc",
+    price: 50,
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <Elements stripe={stripePromise}>
+      <div className="container">
+        <h1>RESERVATION</h1>
+        {selectedProduct ? (
+          <Payment product={selectedProduct} />
+        ) : (
+          <div onClick={() => setSelectedProduct(product)}>
+            <Product name={product.name} price={product.price} />
+            <button>BUY</button>
+          </div>
+        )}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    </Elements>
+  );
+};
 
-export default App
+export default App;
