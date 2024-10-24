@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 
 const Payment: React.FC<{ product: { name: string; price: number } }> = ({
@@ -19,16 +18,15 @@ const Payment: React.FC<{ product: { name: string; price: number } }> = ({
       type: "card",
       card,
     });
-    console.log("~handlePayment~paymentMethod:", paymentMethod);
+    console.log("~ handlePayment ~ paymentMethod:", paymentMethod);
   };
 
   return (
     <form onSubmit={handlePayment}>
       <CardElement />
       <button type="submit" disabled={!stripe}>
-        Buy ${product.price}
+        Pagar ${product.price}
       </button>
-      {error && <p>{error}</p>}
     </form>
   );
 };
